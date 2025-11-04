@@ -233,7 +233,7 @@ function M.run(adapter, params, config, opts)
 
   for _, buf in ipairs(ui.get_buffers()) do
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
-    vim.api.nvim_buf_clear_namespace(buf, -1, 0, -1)
+    colorized_printer:clear(buf, 0, -1)
 
     ui.scroll_down(buf)
   end

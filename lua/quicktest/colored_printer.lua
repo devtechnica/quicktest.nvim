@@ -9,6 +9,8 @@ local api = vim.api
 local ColoredPrinter = {}
 ColoredPrinter.__index = ColoredPrinter
 
+local ns = vim.api.nvim_create_namespace("colored_printer_hl")
+
 function ColoredPrinter.new()
   local self = setmetatable({}, ColoredPrinter)
   self.color_groups = {}
@@ -18,6 +20,13 @@ function ColoredPrinter.new()
   self.bright_color_bold = false
   self:setup_highlight_groups()
   return self
+end
+
+--- @param buf integer
+--- @param start_line integer
+--- @param end_line_exclusive integer
+function ColoredPrinter:clear(buf, start_line, end_line_exclusive)
+  vim.api.nvim_buf_clear_namespace(buf, ns, start_line or 0, end_line_exclusive or -1)
 end
 
 ---@param index integer
@@ -435,7 +444,7 @@ function ColoredPrinter:set_next_lines(lines, buf, lines_count)
     for _, h in ipairs(hl) do
       -- print("[" .. h.start .. "," .. h.end_ .. ")", get_highlight_def(h.group))
 
-      vim.hl.range(buf, -1, h.group, { lines_count - 1 + i, h.start }, { lines_count - 1 + i, h.end_ })
+      vim.hl.range(buf, ns, h.group, { lines_count - 1 + i, h.start }, { lines_count - 1 + i, h.end_ })
       -- api.nvim_buf_add_highlight(buf, -1, h.group, lines_count - 1 + i, h.start, h.end_)
     end
   end
